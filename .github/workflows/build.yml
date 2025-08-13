@@ -1,0 +1,33 @@
+name: Build FishTest-Dev
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+
+      - name: Build Stockfish
+        run: |
+          cd src
+          make build
+
+      - name: Rename binary to FishTest-Dev
+        run: |
+          cd src
+          mv stockfish FishTest-Dev
+
+      - name: Upload FishTest-Dev binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: FishTest-Dev
+          path: src/FishTest-Dev
